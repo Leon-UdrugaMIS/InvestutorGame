@@ -1,0 +1,10 @@
+
+# Node / Electron dependencies
+node_modules/
+
+# Electron build output
+desktop/dist/
+desktop/out/
+
+# Electron packaged binaries
+*.exe
