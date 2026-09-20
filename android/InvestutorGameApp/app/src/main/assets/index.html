@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Investutor | Market Mayhem</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #17232d;
+      --muted: #71808a;
+      --paper: #f5f5f0;
+      --panel: #ffffff;
+      --line: #e7e9e6;
+      --orange: #f5a13b;
+      --orange-dark: #d9791c;
+      --blue: #477ca0;
+      --green: #4d916f;
+      --red: #d35f62;
+      --yellow: #c5b568;
+      --shadow: 0 22px 50px rgba(24, 39, 49, .09);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); }
+    body { padding: 0; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; border: 0; }
+    #app { min-height: 100vh; }
+    .setup-shell { min-height: 100vh; display: grid; grid-template-columns: 1fr; background: #f6f7f3; }
+    .setup-art { position: relative; overflow: hidden; padding: 36px 22px 22px; background: #dce9ec; display: flex; flex-direction: column; justify-content: space-between; }
+    .brand { display: flex; align-items: center; gap: 10px; font: 700 24px 'Space Grotesk'; letter-spacing: -.8px; }
+    .brand-mark { display: flex; align-items: end; gap: 3px; height: 28px; }
+    .brand-mark i { display: block; width: 8px; border-radius: 2px 2px 0 0; background: var(--red); }
+    .brand-mark i:nth-child(1) { height: 11px; } .brand-mark i:nth-child(2) { height: 18px; background: var(--yellow); } .brand-mark i:nth-child(3) { height: 23px; background: var(--green); } .brand-mark i:nth-child(4) { height: 30px; background: var(--blue); }
+    .art-copy h1 { margin: 12px 0; font: 700 clamp(2.5rem, 10vw, 4.2rem)/.92 'Space Grotesk'; letter-spacing: -3px; }
+    .art-copy p { margin: 0; color: #4b626c; line-height: 1.5; }
+    .eyebrow { color: var(--orange-dark); font-size: 11px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; }
+    .ticker-strip { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 20px; color: #4b626c; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .ticker-strip span::before { content: '↗'; margin-right: 6px; color: var(--green); }
+    .setup-panel { padding: 18px 18px 30px; background: #fbfbf8; }
+    .setup-card { width: 100%; }
+    .setup-card h2 { margin: 8px 0; font: 700 30px 'Space Grotesk'; letter-spacing: -1.2px; }
+    .subtitle { color: var(--muted); line-height: 1.5; }
+    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+    .mode-option { padding: 14px 12px; text-align: left; border: 1px solid var(--line); border-radius: 4px; background: #fff; }
+    .mode-option strong { display: block; margin-bottom: 5px; font: 700 15px 'Space Grotesk'; }
+    .mode-option small { color: var(--muted); line-height: 1.35; }
+    .mode-option.selected { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(245,161,59,.17); }
+    .field-label { display: block; margin: 18px 0 9px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+    .bot-picks { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .bot-pick { padding: 10px 8px; border: 1px solid var(--line); border-radius: 4px; background: #fff; color: var(--muted); font-weight: 700; }
+    .bot-pick.selected { color: var(--ink); border-color: var(--blue); background: #eaf3f7; }
+    .bot-pick span { display: block; margin-top: 4px; font-size: 10px; font-weight: 400; }
+    .management-picks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .management-pick { padding: 12px; border: 1px solid var(--line); border-radius: 3px; background: white; text-align: left; }
+    .management-pick.selected { border-color: var(--orange); box-shadow: 0 0 0 3px rgba(245,161,59,.15); }
+    .management-pick strong, .management-pick small, .management-pick em { display: block; }
+    .management-pick strong { font: 700 13px 'Space Grotesk'; }
+    .management-pick small { margin: 4px 0 7px; color: var(--muted); font-size: 10px; }
+    .management-pick em { color: var(--green); font-size: 9px; font-style: normal; line-height: 1.4; }
+    .management-pick em:last-child { color: var(--red); }
+    .theme-select { width: 100%; padding: 12px; border: 1px solid var(--line); border-radius: 3px; background: white; }
+    .primary { padding: 15px 18px; border-radius: 3px; color: #fff; background: var(--ink); font-weight: 700; }
+    .full { width: 100%; margin-top: 20px; }
+    .app-shell { min-height: 100vh; background: #f6f7f3; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 14px; background: rgba(255,255,255,.82); border-bottom: 1px solid var(--line); }
+    .topbar .brand { font-size: 20px; }
+    .top-actions { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .round-pill, .ghost { padding: 8px 10px; border: 1px solid var(--line); border-radius: 3px; background: white; color: var(--muted); font-size: 10px; font-weight: 700; }
+    .dashboard { padding: 16px 14px 34px; }
+    .hero-row { margin-bottom: 16px; }
+    .hero-row h1 { margin: 6px 0 0; font: 700 clamp(2rem, 8vw, 2.8rem) 'Space Grotesk'; letter-spacing: -1.5px; }
+    .hero-row p { margin: 8px 0 0; color: var(--muted); line-height: 1.45; }
+    .table-status { display: flex; flex-wrap: wrap; gap: 8px 10px; margin-top: 12px; font-size: 10px; color: var(--muted); }
+    .dashboard-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    .card { border: 1px solid var(--line); border-radius: 5px; background: var(--panel); box-shadow: var(--shadow); }
+    .board-card, .market-card, .action-card, .players-card, .event-card, .operations-card, .live-controls, .finance-panel, .operations-console { padding: 14px; }
+    .card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+    .card-head h3 { margin: 0; font: 700 18px 'Space Grotesk'; }
+    .card-head small { color: var(--muted); }
+    .board { display: grid; grid-template-columns: repeat(8, minmax(0, 1fr)); gap: 4px; padding: 8px; border-radius: 4px; background: #d9e9e9; }
+    .cell { position: relative; aspect-ratio: 1; border: 1px solid rgba(51,95,106,.12); border-radius: 2px; background: rgba(255,255,255,.43); }
+    .branch { width: 70%; height: 70%; border-radius: 3px; display: inline-block; }
+    .branch.red { background: var(--red); } .branch.yellow { background: var(--yellow); } .branch.green { background: var(--green); } .branch.blue { background: var(--blue); }
+    .legend { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; color: var(--muted); font-size: 10px; }
+    .legend b { display: inline-block; width: 8px; height: 8px; margin-right: 5px; border-radius: 50%; }
+    .stocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .stock { padding: 12px; border: 1px solid var(--line); border-top: 3px solid var(--accent); border-radius: 4px; background: #fcfcfa; }
+    .stock-top { display: flex; justify-content: space-between; align-items: center; }
+    .stock h4 { margin: 0; font: 700 13px 'Space Grotesk'; }
+    .stock small { color: var(--muted); }
+    .price { margin: 10px 0 8px; font: 700 22px 'Space Grotesk'; }
+    .price-line { display: flex; justify-content: space-between; padding-top: 8px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; }
+    .trade-row { display: flex; gap: 6px; margin-top: 10px; }
+    .trade-row button { flex: 1; padding: 8px 6px; border: 1px solid var(--line); border-radius: 3px; background: white; font-size: 10px; font-weight: 700; }
+    .event-card { background: #22323b; color: white; }
+    .event-card .eyebrow { color: #ffbd63; }
+    .event-card h3 { margin: 10px 0 8px; font: 700 20px 'Space Grotesk'; }
+    .event-card p { margin: 0; color: #c8d4d6; line-height: 1.5; font-size: 13px; }
+    .event-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; color: #ffbd63; font-size: 10px; font-weight: 700; }
+    .player { display: grid; grid-template-columns: 30px 1fr auto; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .player:last-child { border-bottom: 0; }
+    .avatar { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #edf0eb; font-size: 11px; font-weight: 700; }
+    .player strong { display: block; font-size: 12px; }
+    .player small { color: var(--muted); font-size: 10px; }
+    .player-score { text-align: right; font-weight: 700; font-size: 12px; }
+    .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .action-grid button { padding: 10px 8px; border: 1px solid var(--line); border-radius: 3px; background: white; text-align: left; }
+    .action-grid strong { display: block; font-size: 11px; } .action-grid small { color: var(--muted); font-size: 10px; }
+    .log { max-height: 150px; overflow: auto; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 10px; line-height: 1.6; }
+    .toast { position: fixed; right: 16px; bottom: 18px; z-index: 20; max-width: 280px; padding: 12px 14px; border-left: 4px solid var(--orange); border-radius: 3px; background: var(--ink); color: white; font-size: 12px; box-shadow: var(--shadow); }
+    .settings-modal { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; background: rgba(23,35,45,.42); padding: 18px; }
+    .settings-sheet { width: min(100%, 500px); padding: 18px; border-radius: 5px; background: #fbfbf8; }
+    .settings-sheet h3 { margin: 6px 0 0; font: 700 24px 'Space Grotesk'; }
+    .settings-sheet select, .settings-sheet input[type='range'] { width: 100%; }
+    .settings-sheet select { padding: 10px; border: 1px solid var(--line); border-radius: 3px; background: white; }
+    .toggle-row { display: flex; gap: 8px; align-items: center; margin-top: 14px; font-size: 12px; }
+    .ops-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .operations-card { margin-top: 16px; }
+    .managed-company-banner { display: flex; flex-direction: column; gap: 4px; margin: -2px 0 12px; padding: 10px 12px; border-left: 3px solid var(--orange); background: rgba(245,161,59,.1); }
+    .managed-company-banner span { color: var(--muted); font-size: 10px; }
+    .managed-company-banner strong { font: 700 15px 'Space Grotesk'; }
+    .managed-company-banner small { color: var(--muted); font-size: 10px; }
+    .ops-company { padding: 10px; border: 1px solid var(--line); border-left: 3px solid var(--accent); border-radius: 3px; }
+    .ops-company-top { display: flex; align-items: center; gap: 8px; }
+    .company-icon { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); }
+    .ops-company-top strong { font-size: 11px; }
+    .ops-company-top small { display: block; color: var(--muted); font-size: 9px; }
+    .ops-metrics { display: flex; justify-content: space-between; margin: 12px 0 8px; color: var(--muted); font-size: 8px; }
+    .ops-metrics b { display: block; color: var(--ink); font-size: 11px; }
+    .progress { height: 4px; overflow: hidden; border-radius: 2px; background: var(--line); }
+    .progress i { display: block; height: 100%; background: var(--accent); }
+    .ops-actions { display: flex; gap: 5px; margin-top: 10px; }
+    .ops-actions button { flex: 1; padding: 7px 4px; border: 1px solid var(--line); border-radius: 2px; background: white; font-size: 9px; font-weight: 700; }
+    .operations-footer { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; color: var(--muted); font-size: 10px; }
+    .mode-operations .board-card, .mode-operations .market-card { display: none; }
+    .operations-console { margin-top: 16px; border: 1px solid var(--line); border-radius: 5px; background: linear-gradient(135deg, rgba(71,124,160,.09), rgba(77,145,111,.06)); }
+    .console-header, .section-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .console-header h3 { margin: 4px 0 0; font: 700 20px 'Space Grotesk'; }
+    .notification-count { color: var(--orange-dark); font-size: 10px; font-weight: 700; }
+    .console-columns { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 12px; }
+    .console-section { padding-top: 12px; border-top: 1px solid var(--line); }
+    .leader-card { display: grid; grid-template-columns: 34px 1fr auto; gap: 8px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
+    .leader-avatar { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: rgba(245,161,59,.18); color: var(--orange-dark); font-weight: 700; font-size: 11px; }
+    .leader-copy strong, .leader-copy small, .leader-copy p { display: block; }
+    .leader-copy strong { font-size: 12px; }
+    .leader-copy small { margin-top: 2px; color: var(--muted); font-size: 9px; }
+    .leader-copy p { margin: 4px 0; color: var(--muted); font-size: 9px; line-height: 1.3; }
+    .ops-control { padding: 7px 8px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); color: var(--ink); font-size: 9px; font-weight: 700; }
+    .country-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+    .country-card { min-height: 96px; padding: 8px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); text-align: left; }
+    .country-card strong, .country-card small, .country-card em, .country-card i { display: block; }
+    .country-card strong { font-size: 10px; }
+    .country-card small { margin-top: 4px; color: var(--muted); font-size: 8px; line-height: 1.3; }
+    .country-card em { margin-top: 8px; color: var(--green); font-size: 8px; font-style: normal; font-weight: 700; }
+    .country-card i { margin-top: 3px; color: var(--red); font-size: 8px; font-style: normal; }
+    .notification-list { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    .notification { padding: 8px 10px; border-left: 3px solid var(--orange); background: rgba(245,161,59,.08); }
+    .notification.positive { border-color: var(--green); }
+    .notification.negative { border-color: var(--red); }
+    .notification b, .notification span { display: block; }
+    .notification b { font-size: 9px; }
+    .notification span { margin-top: 4px; color: var(--muted); font-size: 8px; line-height: 1.3; }
+    .live-controls { margin-top: 16px; }
+    .control-label { display: block; margin: 8px 0; color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .9px; }
+    .live-controls > select { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); }
+    .bot-brain, .bot-brain-list { margin-top: 12px; }
+    .bot-brain { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 10px; }
+    .bot-brain select { width: 110px; padding: 6px; border: 1px solid var(--line); border-radius: 3px; background: var(--panel); }
+    .finance-panel { margin-top: 16px; }
+    .finance-title { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .finance-title strong { display: block; margin-top: 4px; font: 700 16px 'Space Grotesk'; }
+    .cash-available { padding: 8px 10px; border-radius: 3px; background: rgba(77,145,111,.13); color: var(--green); font-size: 10px; font-weight: 700; }
+    .finance-metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+    .finance-metrics div { padding: 8px; border: 1px solid var(--line); border-radius: 3px; }
+    .finance-metrics small, .finance-metrics b, .finance-metrics span { display: block; }
+    .finance-metrics small, .finance-metrics span { color: var(--muted); font-size: 8px; }
+    .finance-metrics b { margin: 6px 0 3px; font: 700 15px 'Space Grotesk'; }
+    .cash-flow-bar { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--muted); font-size: 8px; }
+    .cash-flow-bar i { flex: 1; height: 7px; overflow: hidden; border-radius: 99px; background: var(--line); }
+    .cash-flow-bar i b { display: block; height: 100%; background: linear-gradient(90deg, var(--green), var(--orange)); }
+    button:disabled { opacity: .38; cursor: not-allowed; }
+    @media (min-width: 700px) {
+      .app-shell { max-width: 100%; }
+      .dashboard { max-width: 1200px; margin: 0 auto; }
+      .dashboard-grid { grid-template-columns: minmax(0, 1.5fr) minmax(320px, .9fr); }
+      .right-stack { display: flex; flex-direction: column; gap: 16px; }
+      .console-columns { grid-template-columns: 1.1fr .9fr; }
+    }
+  </style>
+</head>
+<body>
+  <main id="app"></main>
+  <script>
+    const companies = [
+      { id: 'red', name: 'NovaTech', sector: 'Technology', icon: '✦', color: '#d35f62', kv: 30, tc: 42, branches: 5, owned: 2, history: [18, 22, 20, 27, 30, 35, 42] },
+      { id: 'yellow', name: 'HelioGrid', sector: 'Energy', icon: '◒', color: '#c5b568', kv: 20, tc: 27, branches: 3, owned: 1, history: [18, 16, 21, 19, 22, 25, 27] },
+      { id: 'green', name: 'VitaPharm', sector: 'Pharma', icon: '✚', color: '#4d916f', kv: 40, tc: 55, branches: 6, owned: 4, history: [25, 31, 30, 38, 35, 48, 55] },
+      { id: 'blue', name: 'UnionBank', sector: 'Finance', icon: '▦', color: '#477ca0', kv: 20, tc: 18, branches: 2, owned: 0, history: [32, 28, 25, 29, 22, 20, 18] }
+    ];
+    const managementCompanies = [
+      { id:'aether', name:'Aether Robotics', sector:'Automation', icon:'◈', color:'#d35f62', pros:'Fast growth, premium contracts', cons:'High R&D burn' },
+      { id:'solara', name:'Solara Grid', sector:'Clean energy', icon:'☀', color:'#c5b568', pros:'Public support, stable demand', cons:'Capital-heavy rollout' },
+      { id:'meridian', name:'Meridian Health', sector:'Biotech', icon:'✚', color:'#4d916f', pros:'Defensive demand, loyal talent', cons:'Long approval cycles' },
+      { id:'northstar', name:'Northstar Capital', sector:'Finance', icon:'▦', color:'#477ca0', pros:'Strong cash generation', cons:'Rate sensitive, regulated' },
+      { id:'orbit', name:'Orbit Logistics', sector:'Mobility', icon:'⊙', color:'#c87848', pros:'Network effects, global reach', cons:'Fuel and labor exposure' },
+      { id:'terra', name:'Terra Foods', sector:'Consumer', icon:'◇', color:'#8e709b', pros:'Reliable volume, brand trust', cons:'Thin margins, climate risk' }
+    ];
+    const events = [
+      { title: 'AI breakthrough', text: 'NovaTech ships an everyday AI assistant. Investors rush in.', tag: 'NOVA TECH', effect: 'NovaTech +20 | all others -10' },
+      { title: 'Green dividend', text: 'HelioGrid wins a major renewable infrastructure contract.', tag: 'HELIOGRID', effect: 'HelioGrid +20 | charity bonus unlocked' },
+      { title: 'Rate shock', text: 'The central bank raises rates to cool inflation.', tag: 'MACRO', effect: 'UnionBank +20 | others -10' },
+      { title: 'New medicine', text: 'VitaPharm announces a breakthrough treatment.', tag: 'VITAPHARM', effect: 'VitaPharm +20 | demand surges' }
+    ];
+    let state = { screen: 'setup', mode: 'basic', bots: 2, skill: 'sharp', botBrains: ['sharp', 'steady', 'casual', 'steady', 'sharp', 'casual'], round: 1, turn: 0, cash: 0, charity: 0, branches: [], log: ['Welcome to Market Mayhem. Build something brilliant.'], eventIndex: 0, gameMode: 'market', managementCompany: 'aether', phase: 'pre-roll', theme: 'dark', stockSetter: 'Maya Chen', payoutCadence: 'quarterly', payoutTax: 0 };
+    const app = document.querySelector('#app');
+    const money = value => `€${Math.max(0, Math.round(value)).toLocaleString()}`;
+    function render() { state.screen === 'setup' ? renderSetup() : renderGame(); }
+    function renderSetup() {
+      state.screen = 'setup';
+      if (!['market', 'operations'].includes(state.gameMode)) state.gameMode = 'market';
+      if (!managementCompanies.some(company => company.id === state.managementCompany)) state.managementCompany = managementCompanies[0].id;
+      app.innerHTML = `<section class="setup-shell">
+        <div class="setup-art">
+          <div class="brand"><span class="brand-mark"><i></i><i></i><i></i><i></i></span> investutor</div>
+          <div class="art-copy">
+            <div class="eyebrow">A financial strategy game</div>
+            <h1>Make the market. Make your move.</h1>
+            <p>Grow companies, read the room, and build a portfolio that survives the next headline.</p>
+          </div>
+          <div class="ticker-strip"><span>Buy low</span><span>Build smart</span><span>Sell high</span></div>
+        </div>
+        <div class="setup-panel">
+          <div class="setup-card">
+            <div class="eyebrow">New game</div>
+            <h2>Choose your table</h2>
+            <p class="subtitle">Play the approachable market game, or bring in events, charity and company operations for the full challenge.</p>
+            <div class="mode-grid">
+              <button class="mode-option ${state.mode === 'basic' ? 'selected' : ''}" data-mode="basic"><strong>Basic level</strong><small>Classic buy, build, dividend and sell.</small></button>
+              <button class="mode-option ${state.mode === 'advanced' ? 'selected' : ''}" data-mode="advanced"><strong>Advanced level</strong><small>Market news, market prices and charity tax relief.</small></button>
+            </div>
+            <label class="field-label">Company management mode</label>
+            <button class="mode-option ${state.gameMode === 'operations' ? 'selected' : ''}" data-gamemode="operations"><strong>Run the companies <span style="color:var(--orange-dark)">NEW</span></strong><small>Hire leaders, unlock projects and expand a sector alongside the market.</small></button>
+            ${state.gameMode === 'operations' ? `<label class="field-label">Choose your company</label><div class="management-picks">${managementCompanies.map(company => `<button class="management-pick ${state.managementCompany === company.id ? 'selected' : ''}" data-company="${company.id}"><strong>${company.icon} ${company.name}</strong><small>${company.sector}</small><em>+ ${company.pros}</em><em>- ${company.cons}</em></button>`).join('')}</div>` : ''}
+            <label class="field-label">Rival bots</label>
+            <div class="bot-picks">${Array.from({length: state.gameMode === 'operations' ? 7 : 4}, (_, index) => index).map(n => `<button class="bot-pick ${state.bots === n ? 'selected' : ''}" data-bots="${n}">${n === 0 ? 'Solo' : `${n} bot${n > 1 ? 's' : ''}`}<span>${n === 0 ? 'Practice table' : 'Compete at the table'}</span></button>`).join('')}</div>
+            ${state.bots ? `<label class="field-label">Bot intelligence</label><select class="theme-select" id="skill"><option value="casual" ${state.skill === 'casual' ? 'selected' : ''}>Casual · makes bold mistakes</option><option value="steady" ${state.skill === 'steady' ? 'selected' : ''}>Steady · reads the basics</option><option value="sharp" ${state.skill === 'sharp' ? 'selected' : ''}>Sharp · hunts for value</option></select>` : ''}
+            <button class="primary full" id="start">${state.gameMode === 'operations' ? 'Open company headquarters' : 'Start the market'} <span>→</span></button>
+          </div>
+        </div>
+      </section>`;
+      app.querySelectorAll('[data-mode]').forEach(b => b.onclick = () => { state.mode = b.dataset.mode; render(); });
+      app.querySelectorAll('[data-gamemode]').forEach(b => b.onclick = () => { state.gameMode = state.gameMode === 'market' ? 'operations' : 'market'; render(); });
+      app.querySelectorAll('[data-company]').forEach(b => b.onclick = () => { state.managementCompany = b.dataset.company; render(); });
+      app.querySelectorAll('[data-bots]').forEach(b => b.onclick = () => { state.bots = Number(b.dataset.bots); render(); });
+      const skill = app.querySelector('#skill'); if (skill) skill.onchange = e => state.skill = e.target.value;
+      app.querySelector('#start').onclick = () => { state.screen = 'game'; state.cash = state.gameMode === 'operations' ? 80 : 0; state.branches = state.gameMode === 'operations' ? [] : seedBranches(); render(); toast(state.gameMode === 'operations' ? 'Your company is incorporated. Build the team.' : 'The opening bell rings. Your move.'); };
+    }
+    function seedBranches() { return [{c:'red',p:10},{c:'red',p:11},{c:'red',p:18},{c:'yellow',p:36},{c:'yellow',p:37},{c:'green',p:53},{c:'green',p:54},{c:'green',p:61},{c:'blue',p:26},{c:'blue',p:27}]; }
+    function currentPlayer() { return state.phase === 'between' ? 'Rivals are acting' : 'You'; }
+    function canAct() { return state.phase !== 'between'; }
+    function renderGame() {
+      const event = events[state.eventIndex % events.length];
+      const players = [{name:'You', score: portfolioValue(), cash: state.cash, me:true}, ...Array.from({length:state.bots}, (_,i) => ({name:['Maya','Theo','Aria'][i], score: [420,385,350][i] + state.round * 12, cash: 80 + state.round * 5}))];
+      const actionDisabled = state.phase === 'between' ? 'disabled' : '';
+      app.innerHTML = `<div class="app-shell"><header class="topbar"><div class="brand"><span class="brand-mark"><i></i><i></i><i></i><i></i></span> investutor</div><div class="top-actions"><span class="round-pill">ROUND ${state.round}</span><span class="round-pill">${state.mode.toUpperCase()}</span><button class="ghost" id="theme">☼ Light</button><button class="ghost" id="settings">⚙</button><button class="ghost" id="new">New</button></div></header><div class="dashboard"><div class="hero-row"><div><div class="eyebrow">${state.gameMode === 'operations' ? 'Market + operations desk' : 'Your trading floor'}</div><h1>Good morning, investor.</h1><p>Build chains. Spot momentum. Leave the table richer than you found it.</p><div class="table-status"><span><b>Stock setter</b> ${state.stockSetter}</span><span><b>Current turn</b> ${currentPlayer()}</span><span><b>Action window</b> ${state.phase === 'pre-roll' ? 'Before roll' : state.phase === 'post-roll' ? 'After roll' : 'Locked'}</span></div></div><span class="round-pill">YOUR PORTFOLIO ${money(portfolioValue())}</span></div><div class="dashboard-grid"><div><section class="card board-card"><div class="card-head"><h3>Company board</h3><small>Place a branch to grow a chain</small></div><div class="board">${Array.from({length:64}, (_,i) => { const branch=state.branches.find(x=>x.p===i); return `<button class="cell ${branch ? 'hot' : ''}" data-cell="${i}" ${actionDisabled}>${branch ? `<span class="branch ${branch.c}"></span>` : ''}</button>`; }).join('')}</div><div class="legend"><span><b style="background:var(--red)"></b>Technology</span><span><b style="background:var(--yellow)"></b>Energy</span><span><b style="background:var(--green)"></b>Pharma</span><span><b style="background:var(--blue)"></b>Finance</span></div></section><section class="card market-card"><div class="card-head"><h3>Market board</h3><small>Buy and sell shares</small></div><div class="stocks">${companies.map(company => `<article class="stock" style="--accent:${company.color}"><div class="stock-top"><h4>${company.icon} ${company.name}</h4><small>${company.sector}</small></div><div class="price">${money(state.mode === 'advanced' ? company.tc : company.kv)}<small> ${state.mode === 'advanced' ? 'TC' : 'KV'}</small></div><div class="price-line"><span>Owned <strong>${company.owned}</strong></span><span>Branches <strong>${company.branches}</strong></span></div><div class="trade-row"><button data-buy="${company.id}" ${actionDisabled}>Buy</button><button data-sell="${company.id}" ${actionDisabled}>Sell</button></div></article>`).join('')}</div></section>${state.gameMode === 'operations' ? `<section class="card operations-card"><div class="card-head"><div><div class="eyebrow">Company control room</div><h3>Run the companies</h3></div><span class="status-live">LIVE OPS</span></div><div class="managed-company-banner"><span>You run</span><strong>${managementCompanies.find(company => company.id === state.managementCompany).name}</strong><small>${managementCompanies.find(company => company.id === state.managementCompany).pros}</small></div><div class="ops-grid">${managementCompanies.map((company, index) => `<article class="ops-company ${company.id === state.managementCompany ? 'managed' : ''}" style="--accent:${company.color}"><div class="ops-company-top"><span class="company-icon">${company.icon}</span><div><strong>${company.name}</strong><small>${company.sector}</small></div><span class="trend-up">+${index + 1 + state.round}%</span></div><div class="ops-metrics"><span><b>${2 + index}</b> staff</span><span><b>${3 + index + state.round}</b> projects</span><span><b>${money(40 + index * 20)}</b> burn</span></div><div class="progress"><i style="width:${35 + index * 9}%"></i></div><div class="ops-actions"><button data-hire-company="${company.id}" ${actionDisabled}>Hire</button><button data-project-company="${company.id}" ${actionDisabled}>Fund</button></div></article>`).join('')}</div><div class="operations-footer"><span>Quarterly runway <b>${money(960 - state.round * 40)}</b></span><span>Productivity <b>${Math.min(99, 62 + state.round * 4)}%</b></span><span>Next review <b>Round ${state.round + 1}</b></span></div></section>` : ''}</div><div class="right-stack"><section class="card event-card"><div class="eyebrow">Market headline</div><h3>${event.title}</h3><p>${event.text}</p><div class="event-foot"><span>${event.tag}</span><span>${event.effect}</span></div></section><section class="card players-card"><div class="card-head"><h3>Leaderboard</h3><small>Capital</small></div>${players.map((player, index) => `<div class="player"><div class="avatar">${player.name[0]}</div><div><strong>${player.name}</strong><small>${player.me ? 'You' : `Rival ${index}`}</small></div><div class="player-score">${money(player.score)}<small>${money(player.cash)}</small></div></div>`).join('')}</section><section class="card action-card"><h3>Turn controls</h3><div class="action-grid"><button id="roll"><strong>Roll</strong><small>Place a branch</small></button><button id="event" ${state.mode !== 'advanced' ? 'disabled' : ''}><strong>News</strong><small>Trigger event</small></button><button id="end"><strong>End turn</strong><small>Lock in</small></button><button id="resume"><strong>Next round</strong><small>Advance</small></button></div><div class="log">${state.log.slice(-8).map(entry => `<div>• ${entry}</div>`).join('')}</div></section></div></div></div></div>`;
+      app.querySelectorAll('[data-cell]').forEach(cell => cell.onclick = () => canAct() && placeBranch(Number(cell.dataset.cell)));
+      app.querySelectorAll('[data-buy]').forEach(b => b.onclick = () => canAct() && trade(b.dataset.buy, 1));
+      app.querySelectorAll('[data-sell]').forEach(b => b.onclick = () => canAct() && trade(b.dataset.sell, -1));
+      app.querySelectorAll('[data-hire-company]').forEach(button => button.onclick = () => { if (canAct() && state.cash >= 20) { state.cash -= 20; state.log.push(`New talent hired for ${button.dataset.hireCompany}.`); toast('Team hired. Productivity increased.'); render(); } else toast('Not enough cash or the turn is locked.'); });
+      app.querySelectorAll('[data-project-company]').forEach(button => button.onclick = () => { if (canAct() && state.cash >= 30) { state.cash -= 30; state.log.push(`${button.dataset.projectCompany} launched a strategic project.`); toast('Project funded.'); render(); } else toast('Not enough cash or the turn is locked.'); });
+      app.querySelector('#theme').onclick = () => { state.theme = state.theme === 'dark' ? 'light' : 'dark'; document.body.classList.toggle('light-theme', state.theme === 'light'); render(); };
+      app.querySelector('#settings').onclick = showSettings;
+      app.querySelector('#new').onclick = () => { state = {...state, screen:'setup', log: ['Welcome back. Set up a new table.'], round:1, cash:0, charity:0, branches:[], phase:'pre-roll'}; render(); };
+      app.querySelector('#roll').onclick = () => { if (state.phase !== 'pre-roll') return; state.phase = 'post-roll'; state.log.push('You rolled a 4 and unlocked your placement window.'); toast('Dice rolled: 4. Pick any open tile to place your branch.'); render(); };
+      app.querySelector('#event').onclick = () => { if (!canAct() || state.mode !== 'advanced') return; state.eventIndex++; applyEvent(); render(); toast(`New headline: ${events[state.eventIndex % events.length].title}`); };
+      app.querySelector('#end').onclick = () => { if (!canAct()) return; botsAct(); state.phase = 'between'; state.log.push('Your action window is closed. Rivals are now taking their turns.'); render(); toast('Turn locked. You can act again when the next turn begins.'); };
+      app.querySelector('#resume').onclick = () => { state.round++; state.phase = 'pre-roll'; state.stockSetter = ['Maya Chen', 'Theo Park', 'Aria Singh'][state.round % 3]; state.log.push(`Round ${state.round} begins. ${state.stockSetter} is setting the market.`); render(); toast('Your new turn begins.'); };
+      document.body.classList.toggle('light-theme', state.theme === 'light');
+    }
+    function trade(id, direction) { if (!canAct()) return; const c = companies.find(x=>x.id===id); const price = state.mode === 'advanced' ? c.tc : c.kv; if (direction > 0 && state.cash >= price && c.owned < 20) { state.cash -= price; c.owned++; state.log.push(`Bought 1 ${c.name} share for ${money(price)}.`); toast(`Bought 1 ${c.name} share.`); render(); } else if (direction < 0 && c.owned > 0) { state.cash += price; c.owned--; state.log.push(`Sold 1 ${c.name} share for ${money(price)}.`); toast(`Sold 1 ${c.name} share.`); render(); } else toast(direction > 0 ? 'Not enough cash for that position.' : 'You do not own that share yet.'); }
+    function placeBranch(pos) { if (!canAct()) return; if (state.phase !== 'post-roll') return toast('Roll the dice before placing a branch.'); if (state.branches.some(b => b.p === pos)) return toast('That tile is already occupied.'); const c = companies[state.turn % 4]; state.branches.push({c:c.id,p:pos}); c.branches++; const old = c.kv; c.kv = Math.min(100, c.kv + 10); c.history.push(c.kv); state.cash += c.kv; if (c.kv > old) { c.owned && (state.cash += (c.kv-old) * c.owned); } state.phase = 'post-roll'; state.log.push(`Placed a ${c.name} branch. Building reward: ${money(c.kv)}.`); state.turn++; toast(`${c.name} expanded. You earned ${money(c.kv)}.`); render(); }
+    function applyEvent() { const event = events[state.eventIndex % events.length]; if (event.title === 'AI breakthrough') companies[0].tc += 20; if (event.title === 'Green dividend') companies[1].tc += 20; if (event.title === 'Rate shock') companies[3].tc += 20; if (event.title === 'New medicine') companies[2].tc += 20; state.log.push(`Headline: ${event.title}.`); }
+    function botsAct() { for (let i=0; i<state.bots; i++) { const c = companies[(i+state.round) % 4]; c.owned += state.skill === 'sharp' ? 2 : 1; state.log.push(`${['Maya','Theo','Aria'][i]} accumulated ${c.name} shares.`); } }
+    function portfolioValue() { return state.cash + companies.reduce((sum,c) => sum + c.owned * c.kv, 0) + state.charity; }
+    function showSettings() {
+      const modal = document.createElement('div');
+      modal.className = 'settings-modal';
+      modal.innerHTML = `<div class="settings-sheet"><div class="card-head"><div><div class="eyebrow">Table configuration</div><h3>Advanced settings</h3></div><button class="ghost" data-close>Close</button></div><p class="subtitle">Tune the table before the next move.</p><label class="field-label">Starting cash <output id="cash-output">€120</output></label><input id="cash-setting" type="range" min="60" max="300" step="20" value="${state.cash}"><label class="field-label">Event intensity</label><select id="event-setting"><option>Calm · one headline each round</option><option selected>Volatile · frequent swings</option><option>Wild · high-risk market</option></select><label class="field-label">Victory target</label><select id="target-setting"><option>First company to €100 KV</option><option>First company to €120 KV</option><option>20 rounds maximum</option></select><label class="toggle-row"><input type="checkbox" ${state.mode === 'advanced' ? 'checked' : ''} id="news-setting"><span>Keep market news active</span></label><label class="toggle-row"><input type="checkbox" checked id="tips-setting"><span>Show strategy tips after turns</span></label><button class="primary full" data-apply>Apply settings</button></div>`;
+      document.body.appendChild(modal);
+      const range = modal.querySelector('#cash-setting');
+      range.oninput = () => modal.querySelector('#cash-output').textContent = money(range.value);
+      modal.querySelector('[data-close]').onclick = () => modal.remove();
+      modal.querySelector('[data-apply]').onclick = () => { state.cash = Number(range.value); state.log.push('Advanced table settings updated.'); modal.remove(); render(); toast('Settings applied to the table.'); };
+    }
+    function toast(message) { const old = document.querySelector('.toast'); if (old) old.remove(); const el = document.createElement('div'); el.className='toast'; el.textContent=message; document.body.appendChild(el); setTimeout(()=>el.remove(),2600); }
+    render();
+  </script>
+</body>
+</html>

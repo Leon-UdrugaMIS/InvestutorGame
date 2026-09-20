@@ -1,0 +1,15 @@
+{
+  "name": "investutor-desktop",
+  "version": "1.0.0",
+  "description": "Desktop build for Investutor",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "pack:win": "electron-packager . Investutor --platform=win32 --arch=x64 --out=dist --overwrite",
+    "pack:linux": "electron-packager . Investutor --platform=linux --arch=x64 --out=dist --overwrite"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-packager": "^17.0.0"
+  }
+}
